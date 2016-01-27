@@ -28,6 +28,7 @@ BEGIN{inic}
     readln(empleado.edad);
     writeln('Introduzca el sueldo del empleado');
     readln(empleado.sueldo);
+    writeln('------------------------------')
 END;{inic}
     
 PROCEDURE reservaEspacio (VAR alma:TArrayPointer);
@@ -81,11 +82,15 @@ BEGIN
     writeln('Introducir los datos de los empleados por teclado');
     reservaEspacio(almacen);
     mostrar(almacen);
+    readln;
     ordenar(almacen);
     mostrar(almacen);
+    readln;
     writeln('Introducir el limite de sueldo maximo');
     readln(limite);
+    readln;
     eliminar(almacen,limite);
+    readln;
     mostrar(almacen);
   
 END.
