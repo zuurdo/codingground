@@ -8,15 +8,16 @@ TYPE
         sueldo:real;
         nombre:string;
         edad:integer;
-    TPuntero=^TEmpleados;
-    TArrayPointer= ARRAY [TIndice] OF TPunteros;
     END;
+    
+    TArrayPointer= ARRAY [TIndice] OF ^TEmpleados;
+    
 VAR
     almacen:TArrayPointer;
+    limite:real;
     
-PROCEDURE inic (VAR empleado:TEmpleado );
+PROCEDURE inic (VAR empleado:TEmpleados );
 VAR
-    i:integer;
     edad:integer;
     nombre:string;
     sueldo:real;
@@ -29,31 +30,52 @@ BEGIN{inic}
     readln(empleado.sueldo);
 END;{inic}
     
-PROCEDURE reservaEspacio (VAR almacen:TArrayPointer);
+PROCEDURE reservaEspacio (VAR alma:TArrayPointer);
 VAR
   i:integer;
 BEGIN{reservaEspacio}
-    FOR i=MIN TO MAX DO BEGIN
-        new(almacen[i]);
-        inic(almacen[i]^);
+    FOR i:=MIN TO MAX DO BEGIN
+        new(alma[i]);
+        inic(alma[i]^);
     END;
 END;{reservaEspacio}
 
-PROCEDURE ordenar(VAR almacen:TArrayPointer);
+PROCEDURE ordenar(VAR alma:TArrayPointer);
 VAR
     i,j:integer;
-    aux:^TPuntero;
+    aux:^TEmpleados;
 BEGIN
     FOR i:=MIN TO pred(MAX)DO BEGIN
      FOR j:=MIN TO pred(MAX)DO
-            IF (almacen[j]^.sueldo > almacen[j+1]^.sueldo) THEN BEGIN
+            IF (alma[j]^.sueldo > alma[j+1]^.sueldo) THEN BEGIN
                 aux:=almacen[j];
-                almacen[j]:=almacen[j+1];
-                almacen[j+1]:=aux;
+                alma[j]:=almacen[j+1];
+                alma[j+1]:=aux;
             END;
         END;
 END;
     
+PROCEDURE mostrar (VAR alma:TArrayPointer);
+VAR
+    i:integer;
+BEGIN{mostrar}
+    FOR i:=MIN TO MAX DO BEGIN
+    IF (alma[i]<>NIL)THEN
+        writeln('Empleado: ',alma[i]^.nombre, ' de ',alma[i]^.edad,' de edad y cobra: ',alma[i]^.sueldo:0:0,' euros al mes');
+    END;
+END;{mostrar}
+
+PROCEDURE eliminar (VAR alma:TArrayPointer; limit:real);
+VAR
+    i:integer;
+BEGIN{ELIMINAR}
+    FOR i:=MIN TO MAX DO BEGIN
+        IF (alma[i]^.sueldo>limite) THEN BEGIN
+            dispose(alma[i]);
+            alma[i]:=NIL;
+        END;
+    END;
+END;{ELIMINAR}
 
 BEGIN
     writeln('Introducir los datos de los empleados por teclado');
@@ -61,6 +83,10 @@ BEGIN
     mostrar(almacen);
     ordenar(almacen);
     mostrar(almacen);
-    
+    writeln('Introducir el limite de sueldo maximo');
+    readln(limite);
+    eliminar(almacen,limite);
+    mostrar(almacen);
   
 END.
+
