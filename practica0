@@ -1,0 +1,66 @@
+Program practica0;
+CONST
+    MIN=1;
+    MAX=3;
+TYPE
+    TIndice=MIN..MAX;
+    TEmpleados= RECORD
+        sueldo:real;
+        nombre:string;
+        edad:integer;
+    TPuntero=^TEmpleados;
+    TArrayPointer= ARRAY [TIndice] OF TPunteros;
+    END;
+VAR
+    almacen:TArrayPointer;
+    
+PROCEDURE inic (VAR empleado:TEmpleado );
+VAR
+    i:integer;
+    edad:integer;
+    nombre:string;
+    sueldo:real;
+BEGIN{inic}
+    writeln('Introduzca el nombre del empleado');
+    readln(empleado.nombre);
+    writeln('Introduzca la edad del empleado');
+    readln(empleado.edad);
+    writeln('Introduzca el sueldo del empleado');
+    readln(empleado.sueldo);
+END;{inic}
+    
+PROCEDURE reservaEspacio (VAR almacen:TArrayPointer);
+VAR
+  i:integer;
+BEGIN{reservaEspacio}
+    FOR i=MIN TO MAX DO BEGIN
+        new(almacen[i]);
+        inic(almacen[i]^);
+    END;
+END;{reservaEspacio}
+
+PROCEDURE ordenar(VAR almacen:TArrayPointer);
+VAR
+    i,j:integer;
+    aux:^TPuntero;
+BEGIN
+    FOR i:=MIN TO pred(MAX)DO BEGIN
+     FOR j:=MIN TO pred(MAX)DO
+            IF (almacen[j]^.sueldo > almacen[j+1]^.sueldo) THEN BEGIN
+                aux:=almacen[j];
+                almacen[j]:=almacen[j+1];
+                almacen[j+1]:=aux;
+            END;
+        END;
+END;
+    
+
+BEGIN
+    writeln('Introducir los datos de los empleados por teclado');
+    reservaEspacio(almacen);
+    mostrar(almacen);
+    ordenar(almacen);
+    mostrar(almacen);
+    
+  
+END.
